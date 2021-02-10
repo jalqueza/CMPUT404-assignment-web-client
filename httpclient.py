@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # coding: utf-8
 # Copyright 2016 Abram Hindle, https://github.com/tywtyw2002, and https://github.com/treedust
-# 
+# Copyright 2021 Jerwyn Alqueza
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -26,6 +27,7 @@ import urllib.parse
 
 def help():
     print("httpclient.py [GET/POST] [URL]\n")
+
 
 class HTTPResponse(object):
     def __init__(self, code=200, body=""):
@@ -65,13 +67,31 @@ class HTTPClient(object):
                 buffer.extend(part)
             else:
                 done = not part
+        print(buffer)
         return buffer.decode('utf-8')
 
+    # implement
     def GET(self, url, args=None):
         code = 500
         body = ""
+
+        # parse url
+        parsed_url = urllib.parse.urlparse(url)
+        host = parsed_url.hostname
+        port = parsed_url.port if parsed_url.port != None else 80
+        path = parsed_url.path if parsed_url.path != "" else "/"
+
+        # connect and send
+        self.connect(parsed_url.hostname, port)
+        request = f"GET {path} HTTP/1.1\r\nHost: {host}\r\nConnection: Close\r\n\r\n"
+        self.sendall(request)
+        response = self.recvall(self.socket)
+        print(response)
+
+
         return HTTPResponse(code, body)
 
+    # implement
     def POST(self, url, args=None):
         code = 500
         body = ""
