@@ -22,3 +22,4 @@ References Used by Jerwyn Alqueza
 ========================
 
 https://pymotw.com/3/urllib.parse/
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
