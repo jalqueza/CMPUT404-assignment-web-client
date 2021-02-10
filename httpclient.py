@@ -84,6 +84,8 @@ class HTTPClient(object):
         response = self.recvall(self.socket)
         body = self.get_body(response)
         code = self.get_code(response)
+        print(f"code {code}")
+        print(body)
         self.close()
 
         return HTTPResponse(code, body)
@@ -106,6 +108,8 @@ class HTTPClient(object):
         response = self.recvall(self.socket)
         body = self.get_body(response)
         code = self.get_code(response)
+        print(f"code {code}")
+        print(body)
         self.close()
 
         return HTTPResponse(code, body)
