@@ -68,7 +68,6 @@ class HTTPClient(object):
                 done = not part
         return buffer.decode('utf-8')
 
-    # implement
     def GET(self, url, args=None):
         code = 500
 
@@ -89,7 +88,6 @@ class HTTPClient(object):
 
         return HTTPResponse(code, body)
 
-    # implement
     def POST(self, url, args=None):
         code = 500
 
@@ -98,17 +96,18 @@ class HTTPClient(object):
         host = parsed_url.hostname
         port = parsed_url.port if parsed_url.port != None else 80
         path = parsed_url.path if parsed_url.path != "" else "/"
+        args = "" if args == None else urllib.parse.urlencode(args)
+        content_length = 0 if args == None else len(args)
 
         # connect and send
-        # self.connect(parsed_url.hostname, port)
-        # request = f"POST {path} HTTP/1.1\r\nHost: {host}\r\nConnection: Close\r\n\r\n"
-        # self.sendall(request)
-        # response = self.recvall(self.socket)
-        # body = self.get_body(response)
-        # code = self.get_code(response)
-        # self.close()
+        self.connect(parsed_url.hostname, port)
+        request = f"POST {path} HTTP/1.1\r\nHost: {host}\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: {content_length}\r\nConnection: Close\r\n\r\n{args}\r\n\r\n"
+        self.sendall(request)
+        response = self.recvall(self.socket)
+        body = self.get_body(response)
+        code = self.get_code(response)
+        self.close()
 
-        body = ""
         return HTTPResponse(code, body)
 
     def command(self, url, command="GET", args=None):
